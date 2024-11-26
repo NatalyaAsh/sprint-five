@@ -61,13 +61,13 @@ type InfoMessage struct {
 // TrainingInfo возвращает труктуру InfoMessage, в которой хранится вся информация о проведенной тренировке.
 func (t Training) TrainingInfo() InfoMessage {
 	// вставьте ваш код ниже
-	msg := InfoMessage{}
-	msg.TrainingType = t.TrainingType
-	msg.Duration = t.Duration
-	msg.Distance = t.distance()
-	msg.Speed = t.meanSpeed()
-	msg.Calories = t.Calories()
-	return msg
+	return InfoMessage{
+		TrainingType: t.TrainingType,
+		Duration:     t.Duration,
+		Distance:     t.distance(),
+		Speed:        t.meanSpeed(),
+		Calories:     t.Calories(),
+	}
 }
 
 // String возвращает строку с информацией о проведенной тренировке.
@@ -188,7 +188,7 @@ func (s Swimming) meanSpeed() float64 {
 func (s Swimming) Calories() float64 {
 	// вставьте ваш код ниже
 	calories := (s.meanSpeed() + SwimmingCaloriesMeanSpeedShift) *
-		SwimmingCaloriesWeightMultiplier * s.Weight * s.Duration.Hours()
+		SwimmingCaloriesWeightMultiplier * s.Weight * (s.Duration.Minutes() / MinInHours)
 	return calories
 }
 
@@ -196,7 +196,13 @@ func (s Swimming) Calories() float64 {
 // Это переопределенный метод TrainingInfo() из Training.
 func (s Swimming) TrainingInfo() InfoMessage {
 	// вставьте ваш код ниже
-	return s.Training.TrainingInfo()
+	return InfoMessage{
+		TrainingType: s.TrainingType,
+		Duration:     s.Duration,
+		Distance:     s.distance(),
+		Speed:        s.meanSpeed(),
+		Calories:     s.Calories(),
+	}
 }
 
 // ReadData возвращает информацию о проведенной тренировке.
